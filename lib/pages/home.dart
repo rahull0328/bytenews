@@ -4,6 +4,7 @@ import 'package:bytenews/services/data.dart';
 import 'package:bytenews/services/slider_data.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,10 +14,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   //import the list of sliders and categories
   List<CategoryModel> categories = [];
   List<SliderModel> sliders = [];
+
+  int activeIndex = 0;
   @override
   void initState() {
     categories = getCategories();
@@ -61,28 +63,66 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
-            CarouselSlider.builder(itemCount: sliders.length, itemBuilder: (context, index, realIndex){
-              String? res = sliders[index].image;
-              String? res1 = sliders[index].name;
-              return buildImage(res!, index, res1!);
-            },
-                options: CarouselOptions(
-                height: 200,
+            SizedBox(height: 30.0),
+            CarouselSlider.builder(
+              itemCount: sliders.length,
+              itemBuilder: (context, index, realIndex) {
+                String? res = sliders[index].image;
+                String? res1 = sliders[index].name;
+                return buildImage(res!, index, res1!);
+              },
+              options: CarouselOptions(
+                height: 250,
                 autoPlay: true,
-                enlargeStrategy: CenterPageEnlargeStrategy.height
-              )
-            )
+                enlargeCenterPage: true,
+                enlargeStrategy: CenterPageEnlargeStrategy.height,
+                onPageChanged: (index, reason){
+                  setState(() {
+                    activeIndex = index;
+                  });
+                }
+              ),
+            ),
+            SizedBox(height: 30.0,),
+            buildIndicator(),
           ],
         ),
       ),
     );
   }
+
   Widget buildImage(String image, int index, String name) => Container(
-    child: Image.asset(
-      image,
-      fit: BoxFit.cover,
-      width: MediaQuery.of(context).size.width,
+    margin: EdgeInsets.symmetric(horizontal: 5.0),
+    child: Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            image,
+            height: 250,
+            fit: BoxFit.cover,
+            width: MediaQuery.of(context).size.width,
+          ),
+        ),
+        Container(
+          height: 250,
+          padding: EdgeInsets.only(left: 10.0),
+          margin: EdgeInsets.only(top: 160.0),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))),
+          child: Text(name, style: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),),
+        ),
+      ],
     ),
+  );
+  Widget buildIndicator() => AnimatedSmoothIndicator(
+      activeIndex: activeIndex,
+      count: sliders.length,
+      effect: const JumpingDotEffect(
+        jumpScale: 1,
+        verticalOffset: 10,
+        activeDotColor: Colors.deepPurple,
+      ),
   );
 }
 
@@ -95,25 +135,35 @@ class CategoryTile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(right: 16),
       child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: Image.asset(
-                  image,
-                  width: 120,
-                  height: 80, fit: BoxFit.cover,
-              ),
-            ),
-            Container(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Image.asset(
+              image,
               width: 120,
               height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: Colors.black26,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Container(
+            width: 120,
+            height: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              color: Colors.black26,
+            ),
+            child: Center(
+              child: Text(
+                categoryName,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              child: Center(child: Text(categoryName, style: TextStyle(color: Colors.white,fontSize: 15, fontWeight: FontWeight.bold),)),
-            )
-          ],
+            ),
+          ),
+        ],
       ),
     );
   }
