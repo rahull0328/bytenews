@@ -4,6 +4,7 @@ import 'package:bytenews/models/slider_model.dart';
 import 'package:bytenews/services/data.dart';
 import 'package:bytenews/services/news.dart';
 import 'package:bytenews/services/slider_data.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -56,6 +57,7 @@ class _HomeState extends State<Home> {
               style: TextStyle(
                 color: Colors.deepPurple,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'Pacifico',
               ),
             ),
           ],
@@ -159,141 +161,16 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       SizedBox(height: 10.0),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Material(
-                            elevation: 3.0,
-                            borderRadius: BorderRadius.circular(10),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10.0,
-                                horizontal: 5.0,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset(
-                                        "assets/images/science.jpg",
-                                        height: 120,
-                                        width: 120,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 8.0),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                            1.7,
-                                        child: Text(
-                                          "Rui Costa outsprints breakaway to win stage 15",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 17.0,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 7.0),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                            1.7,
-                                        child: Text(
-                                          "Then a final kick to beat lennard kamma",
-                                          style: TextStyle(
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                       SizedBox(height: 20.0),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Material(
-                          elevation: 3.0,
-                          borderRadius: BorderRadius.circular(10),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 10.0,
-                              horizontal: 5.0,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.asset(
-                                      "assets/images/science.jpg",
-                                      height: 120,
-                                      width: 120,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 8.0),
-                                Column(
-                                  children: [
-                                    Container(
-                                      width:
-                                          MediaQuery.of(context).size.width /
-                                          1.7,
-                                      child: Text(
-                                        "Rui Costa outsprints breakaway to win stage 15",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 17.0,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 7.0),
-                                    Container(
-                                      width:
-                                          MediaQuery.of(context).size.width /
-                                          1.7,
-                                      child: Text(
-                                        "Then a final kick to beat lennard kamma",
-                                        style: TextStyle(
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15.0,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10.0),
                       Container(
                         child: ListView.builder(
                           shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
                           itemCount: articles.length,
                           itemBuilder: (context, index) {
                             return BlogTile(
                               desc: articles[index].description!,
-                              imageUrl: articles[index].url!,
+                              imageUrl: articles[index].urlToImage!,
                               title: articles[index].title!,
                             );
                           },
@@ -422,10 +299,10 @@ class BlogTile extends StatelessWidget {
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      imageUrl,
-                      height: 120,
-                      width: 120,
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      height: 100,
+                      width: 100,
                       fit: BoxFit.cover,
                     ),
                   ),

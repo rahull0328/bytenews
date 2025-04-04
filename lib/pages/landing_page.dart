@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'home.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -8,65 +10,76 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+  Future<void> _onGetStarted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isFirstTime', false);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const Home()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+        width: double.infinity,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Material(
-              elevation: 3.0,
+              elevation: 5.0,
               borderRadius: BorderRadius.circular(30),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Image.asset(
                   "assets/images/building.jpg",
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width / 1.7,
+                  height: MediaQuery.of(context).size.width / 1.0,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
-            Text(
-              "News from around the\n       world for you",
+            const SizedBox(height: 30.0),
+            const Text(
+              "Explore the World's News",
+              textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 26.0,
+                color: Colors.deepPurple,
+                fontSize: 28.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20.0),
-            Text(
-              "Best time to read, take your time to read\n                 a little more of this world",
+            const SizedBox(height: 16.0),
+            const Text(
+              "Your personalized feed to stay informed.\nDive deep into top stories now!",
+              textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.black45,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w500,
+                color: Colors.black54,
+                fontSize: 16.0,
+                height: 1.5,
               ),
             ),
-            SizedBox(height: 40.0,),
-            Container(
-              width: MediaQuery.of(context).size.width/1.2,
-              child: Material(
-                borderRadius: BorderRadius.circular(30),
-                elevation: 5.0,
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple,
+            const SizedBox(height: 40.0),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 1.3,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: _onGetStarted,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Center(
-                    child: Text(
-                      "Get Started",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                  elevation: 5.0,
+                ),
+                child: const Text(
+                  "Get Started",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
