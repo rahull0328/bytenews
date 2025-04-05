@@ -1,6 +1,7 @@
 import 'package:bytenews/models/article_model.dart';
 import 'package:bytenews/models/category_model.dart';
 import 'package:bytenews/models/slider_model.dart';
+import 'package:bytenews/pages/article_view.dart';
 import 'package:bytenews/services/data.dart';
 import 'package:bytenews/services/news.dart';
 import 'package:bytenews/services/slider_data.dart';
@@ -56,7 +57,7 @@ class _HomeState extends State<Home> {
               "News",
               style: TextStyle(
                 color: Colors.deepPurple,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
                 fontFamily: 'Pacifico',
               ),
             ),
@@ -97,17 +98,18 @@ class _HomeState extends State<Home> {
                               "Top Headlines!",
                               style: TextStyle(
                                 color: Colors.black,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 24.0,
                                 fontFamily: 'Pacifico',
                               ),
                             ),
                             Text(
-                              "View All",
+                              "View all",
                               style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.0,
+                                fontFamily: 'Pacifico',
                               ),
                             ),
                           ],
@@ -145,16 +147,18 @@ class _HomeState extends State<Home> {
                               "Latest Trends!",
                               style: TextStyle(
                                 color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 22.0,
+                                fontFamily: 'Pacifico',
                               ),
                             ),
                             Text(
-                              "View All",
+                              "View all",
                               style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.0,
+                                fontFamily: 'Pacifico',
                               ),
                             ),
                           ],
@@ -169,6 +173,7 @@ class _HomeState extends State<Home> {
                           itemCount: articles.length,
                           itemBuilder: (context, index) {
                             return BlogTile(
+                              url: articles[index].url!,
                               desc: articles[index].description!,
                               imageUrl: articles[index].urlToImage!,
                               title: articles[index].title!,
@@ -275,67 +280,83 @@ class CategoryTile extends StatelessWidget {
   }
 }
 
+//besides latest trends section
 class BlogTile extends StatelessWidget {
-  String imageUrl, title, desc;
-  BlogTile({required this.desc, required this.imageUrl, required this.title});
+  String imageUrl, title, desc, url;
+  BlogTile({
+    required this.desc,
+    required this.imageUrl,
+    required this.title,
+    required this.url,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Material(
-          elevation: 3.0,
-          borderRadius: BorderRadius.circular(10),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10.0,
-              horizontal: 5.0,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ArticleView(blogUrl: url)),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Material(
+            elevation: 3.0,
+            borderRadius: BorderRadius.circular(10),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10.0,
+                horizontal: 5.0,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        height: 110,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 8.0),
-                Column(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17.0,
+                  SizedBox(width: 8.0),
+                  Column(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width / 1.7,
+                        child: Text(
+                          title,
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17.0,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 7.0),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 1.7,
-                      child: Text(
-                        desc,
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
+                      SizedBox(height: 7.0),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 1.7,
+                        child: Text(
+                          desc,
+                          maxLines: 3,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.0,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

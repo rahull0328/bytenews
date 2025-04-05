@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'News App',
+      title: 'byteNews',
       debugShowCheckedModeBanner: false,
       home: FutureBuilder(
         future: checkFirstTime(),
