@@ -30,12 +30,12 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     categories = getCategories();
-    sliders = getSliders();
+    getSlider();
     getNews();
     super.initState();
   }
 
-  //function for fetching news
+  //function for fetching news below the latest trends section
   getNews() async {
     News newsClass = News();
     await newsClass.getNews();
@@ -43,6 +43,13 @@ class _HomeState extends State<Home> {
     setState(() {
       _loading = false;
     });
+  }
+
+  //api data for the carousel
+  getSlider() async {
+    Sliders sliderService = Sliders();
+    await sliderService.getSlider();
+    sliders = sliderService.sliders;
   }
 
   @override
@@ -109,7 +116,6 @@ class _HomeState extends State<Home> {
                                 color: Colors.deepPurple,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.0,
-                                fontFamily: 'Pacifico',
                               ),
                             ),
                           ],
@@ -117,10 +123,10 @@ class _HomeState extends State<Home> {
                       ),
                       SizedBox(height: 20.0),
                       CarouselSlider.builder(
-                        itemCount: sliders.length,
+                        itemCount: 5,
                         itemBuilder: (context, index, realIndex) {
-                          String? res = sliders[index].image;
-                          String? res1 = sliders[index].name;
+                          String? res = sliders[index].urlToImage;
+                          String? res1 = sliders[index].title;
                           return buildImage(res!, index, res1!);
                         },
                         options: CarouselOptions(
@@ -158,7 +164,6 @@ class _HomeState extends State<Home> {
                                 color: Colors.deepPurple,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.0,
-                                fontFamily: 'Pacifico',
                               ),
                             ),
                           ],
@@ -194,8 +199,8 @@ class _HomeState extends State<Home> {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: Image.asset(
-            image,
+          child: CachedNetworkImage(
+            imageUrl: image,
             height: 250,
             fit: BoxFit.cover,
             width: MediaQuery.of(context).size.width,
@@ -203,8 +208,8 @@ class _HomeState extends State<Home> {
         ),
         Container(
           height: 250,
-          padding: EdgeInsets.only(left: 10.0),
-          margin: EdgeInsets.only(top: 160.0),
+          padding: EdgeInsets.only(left: 12.0),
+          margin: EdgeInsets.only(top: 165.0),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             color: Colors.black26,
@@ -215,9 +220,10 @@ class _HomeState extends State<Home> {
           ),
           child: Text(
             name,
+            maxLines: 2,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20.0,
+              fontSize: 22.0,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -228,7 +234,7 @@ class _HomeState extends State<Home> {
   //slider dots indicator
   Widget buildIndicator() => AnimatedSmoothIndicator(
     activeIndex: activeIndex,
-    count: sliders.length,
+    count: 5,
     effect: const JumpingDotEffect(
       jumpScale: 1,
       verticalOffset: 10,

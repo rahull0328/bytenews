@@ -28,12 +28,26 @@ class _ArticleViewState extends State<ArticleView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text(
-            "Articles",
-            style: TextStyle(fontFamily: 'Pacifico'),
-          )
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("byte"),
+              Text(
+                  "News",
+                  style: TextStyle(
+                    color: Colors.deepPurple,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Pacifico'
+                  ),
+              )
+            ],
+          ),
+        centerTitle: true,
+        elevation: 0.0,
       ),
-      body: WebViewWidget(controller: _controller),
+      body: Container(
+          child: WebViewWidget(controller: _controller)
+      ),
     );
   }
 }
