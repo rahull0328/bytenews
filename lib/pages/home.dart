@@ -1,6 +1,7 @@
 import 'package:bytenews/models/article_model.dart';
 import 'package:bytenews/models/category_model.dart';
 import 'package:bytenews/models/slider_model.dart';
+import 'package:bytenews/pages/all_news.dart';
 import 'package:bytenews/pages/article_view.dart';
 import 'package:bytenews/pages/category_news.dart';
 import 'package:bytenews/services/data.dart';
@@ -111,12 +112,17 @@ class _HomeState extends State<Home> {
                                 fontFamily: 'Pacifico',
                               ),
                             ),
-                            Text(
-                              "View all",
-                              style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> AllNews(news: "Headlines")));
+                              },
+                              child: Text(
+                                "View all",
+                                style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16.0,
+                                ),
                               ),
                             ),
                           ],
@@ -159,12 +165,17 @@ class _HomeState extends State<Home> {
                                 fontFamily: 'Pacifico',
                               ),
                             ),
-                            Text(
-                              "View all",
-                              style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> AllNews(news: "Latest Trends")));
+                              },
+                              child: Text(
+                                "View all",
+                                style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16.0,
+                                ),
                               ),
                             ),
                           ],
