@@ -5,6 +5,7 @@ import 'package:bytenews/services/news.dart';
 import 'package:bytenews/services/slider_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AllNews extends StatefulWidget {
   final String news;
@@ -41,8 +42,77 @@ class _AllNewsState extends State<AllNews> {
     });
   }
 
+  Widget buildShimmerLoader() {
+    return ListView.builder(
+      itemCount: 5,
+      padding: const EdgeInsets.all(10),
+      itemBuilder: (context, index) {
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: double.infinity,
+                        height: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: double.infinity,
+                        height: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        height: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isHeadline = widget.news == "Headlines";
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -57,24 +127,24 @@ class _AllNewsState extends State<AllNews> {
         centerTitle: true,
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? buildShimmerLoader()
           : ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         shrinkWrap: true,
         physics: const ClampingScrollPhysics(),
-        itemCount:
-        widget.news == "Headlines" ? sliders.length : articles.length,
+        itemCount: isHeadline ? sliders.length : articles.length,
         itemBuilder: (context, index) {
           return AllNewsSection(
-            image: widget.news == "Headlines"
+            image: isHeadline
                 ? sliders[index].urlToImage!
                 : articles[index].urlToImage!,
-            desc: widget.news == "Headlines"
+            desc: isHeadline
                 ? sliders[index].description!
                 : articles[index].description!,
-            title: widget.news == "Headlines"
+            title: isHeadline
                 ? sliders[index].title!
                 : articles[index].title!,
-            url: widget.news == "Headlines"
+            url: isHeadline
                 ? sliders[index].url!
                 : articles[index].url!,
           );
@@ -100,39 +170,57 @@ class AllNewsSection extends StatelessWidget {
         context,
         MaterialPageRoute(builder: (context) => ArticleView(blogUrl: url)),
       ),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 4,
+        margin: const EdgeInsets.symmetric(vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
               child: CachedNetworkImage(
                 imageUrl: image,
                 width: MediaQuery.of(context).size.width,
                 height: 200,
                 fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image, size: 40),
+                ),
               ),
             ),
-            const SizedBox(height: 8.0),
-            Text(
-              title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    desc,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 4.0),
-            Text(
-              desc,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 14),
-            ),
-            const SizedBox(height: 20.0),
           ],
         ),
       ),
