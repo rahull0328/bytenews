@@ -42,6 +42,20 @@ const String newsApiKey = "YOUR_NEWS_API_KEY";
 
 ---
 
+### 📦 Dependencies
+
+- http
+
+- carousel_slider
+
+- webview_flutter
+
+- cached_network_image
+
+- shimmer
+
+---
+
 ### 💡 Future Improvements
 - 🔍 Search functionality
 
